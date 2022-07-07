@@ -1,20 +1,21 @@
 #pragma once
 
-#include <vgui/3dparty.hpp>
-#include <vgui/config.hpp>
-#include <vgui/def.hpp>
+#include "3dparty.hpp"
+#include "config.hpp"
+#include "def.hpp"
 
-#include <vgui/Exception.hpp>
-#include <vgui/unique_vector.hpp>
-#include <vgui/Relatives.hpp>
+#include "Exception.hpp"
+#include "unique_vector.hpp"
+#include "Relatives.hpp"
 
-#include <vgui/Rect.hpp>
-#include <vgui/Color.hpp>
-#include <vgui/Path.hpp>
-#include <vgui/Canvas.hpp>
+#include "Rect.hpp"
+#include "Color.hpp"
+#include "Path.hpp"
+//#include "WGLContext.hpp"
+//#include "Canvas.hpp"
 
-#include <vgui/EventHandler.hpp>
-#include <vgui/Win32Window.hpp>
-#include <vgui/Window.hpp>
-#include <vgui/Widget.hpp>
+#include "EventHandler.hpp"
+#include "Win32Window.hpp"
+#include "Window.hpp"
+#include "Widget.hpp"
 

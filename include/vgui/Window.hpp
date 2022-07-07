@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vgui/vgui.hpp>
+#include "vgui.hpp"
 
 
 namespace vgui
@@ -46,8 +46,8 @@ public:
             for(auto window : s_windows)
                 window->ProcessEvents();
 
-            for(auto window : s_windows)
-                window->OnIdle();
+           /* for(auto window : s_windows)
+                window->OnIdle();*/
         }
 
         return 777;
@@ -55,9 +55,9 @@ public:
 
 protected:
 
-    void OnDraw(vgui::Canvas& canvas) override
+    void OnDraw() override
     {
-        m_widget.OnDraw(canvas);
+        //m_widget.OnDraw(canvas);
     }
 
     void OnSize(double x, double y, double width, double height) override

@@ -1,11 +1,12 @@
 #pragma once
 
+#include <cmath>
+#include <string>
+#include <cstring>
+
 
 namespace vgui
 {
-
-
-#include <cmath>
 
 /**
   If return type of 'operator' std::is_integral,
@@ -30,13 +31,11 @@ VGUI_ROUND_OPERATOR(RoundDiv, /)
 
 #ifdef _WIN32
 
-#include <string>
-#include <cstring>
 #include <windows.h>
 #include <tchar.h>
 
-using tstring  = std::basic_string<TCHAR>;
-using tstringstream  = std::basic_stringstream<TCHAR>;
+//using tstring  = std::basic_string<TCHAR>;
+//using tstringstream  = std::basic_stringstream<TCHAR>;
 
 static std::wstring Utf8ToWstring(const char* str)
 {
@@ -62,4 +61,3 @@ static std::wstring Utf8ToWstring(const char* str)
 #endif//_WIN32
 
 }//namespace vgui
-

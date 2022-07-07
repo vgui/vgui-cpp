@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vgui/vgui.hpp>
+#include "vgui.hpp"
 
 
 namespace vgui
@@ -121,14 +121,14 @@ public:
         return m_window;
     }
 
-    vgui::Canvas& Canvas()
+  /*  vgui::Canvas& Canvas()
     {
         return m_window->Canvas();
-    }
+    }*/
 
     Widget& Redraw()
     {
-        OnDraw(Canvas());
+        //OnDraw(Canvas());
         return *this;
     }
 
@@ -151,7 +151,7 @@ protected:
             m_window = newparent->m_window;
     }
 
-    void OnDraw(vgui::Canvas& canvas) override
+    void OnDraw() override
     {
         if(Visible())
         {
@@ -159,7 +159,7 @@ protected:
 //            g.Render(m_stroker, BorderColor());
 
             for(size_t i = 0; i < Childs(); ++i)
-                Child(i).OnDraw(canvas);
+                Child(i).OnDraw();
         }
     }
 

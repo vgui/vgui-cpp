@@ -1,6 +1,7 @@
 #pragma once
 
-#include <vgui/vgui.hpp>
+#include "vgui.hpp"
+#include <windows.h>
 
 
 namespace vgui::impl
@@ -14,7 +15,7 @@ private:
     //CRTP friend trick that allow check derived class.
     friend T;
     //Now derived class can call private constructor
-    Win32Window() = default;
+    //() = default;
 
 public:
 
@@ -72,10 +73,10 @@ public:
         return Derived();
     }
 
-    vgui::Canvas& Canvas()
+    /* vgui::Canvas& Canvas()
     {
         return m_canvas;
-    }
+    }*/
 
 protected:
 
@@ -91,6 +92,37 @@ protected:
     virtual void ClipChildren()
     {}
 
+    void DrawRoundRect(Cairo::RefPtr<Cairo::Context> context, double l,double t,double w,double h)
+    {
+        cairo_t* cr = (cairo_t*)context->cobj();
+        /* a custom shape that could be wrapped in a function */
+        double x         = l,        /* parameters like cairo_rectangle */
+                y         = t,
+                width         = w,
+                height        = h,
+                aspect        = 1.0,     /* aspect ratio */
+                corner_radius = height / 10.0;   /* and corner curvature radius */
+
+        double radius = corner_radius / aspect;
+        double degrees = M_PI / 180.0;
+
+        cairo_new_sub_path (cr);
+        cairo_arc (cr, x + width - radius, y + radius, radius, -90 * degrees, 0 * degrees);
+        cairo_arc (cr, x + width - radius, y + height - radius, radius, 0 * degrees, 90 * degrees);
+        cairo_arc (cr, x + radius, y + height - radius, radius, 90 * degrees, 180 * degrees);
+        cairo_arc (cr, x + radius, y + radius, radius, 180 * degrees, 270 * degrees);
+        cairo_close_path (cr);
+
+        double r = (rand()%100)/100.0;
+        double g = (rand()%100)/100.0;
+        double b = (rand()%100)/100.0;
+
+        cairo_set_source_rgb (cr, r, g, b);
+        cairo_fill_preserve  (cr);
+        cairo_set_source_rgba (cr, 0.5, 0, 0, 0.5);
+        cairo_set_line_width (cr, 10.0);
+        cairo_stroke (cr);
+    }
 
     virtual bool ProcessEvent(HWND handle, UINT msg, WPARAM wparam, LPARAM lparam, LRESULT& result)
     {
@@ -99,14 +131,35 @@ protected:
             if(msg == WM_PAINT)
             {
                 PAINTSTRUCT ps;
-                m_hdc = ::BeginPaint(m_hwnd, &ps);
+                HDC hdc = ::BeginPaint(m_hwnd, &ps);
 
-                m_canvas.Clear(m_color);
+                RECT rect;
+                ::GetClientRect(m_hwnd, &rect);
 
-                OnDraw(m_canvas);
+                auto surface = Cairo::Win32Surface::create(hdc);
+                auto context = Cairo::Context::create(surface);
 
-                m_canvas.Display(m_hdc);
+//                context->set_source_rgb(1.0, 0.0, 0.0);
+//                context->rectangle(rect.left, rect.top, rect.right, rect.bottom);
+//                context->fill();
 
+                srand(time(NULL));
+
+                for(int i = 0; i<300;i++)
+                {
+                    double r = (rand()%100)/100.0;
+                    double g = (rand()%100)/100.0;
+                    double b = (rand()%100)/100.0;
+
+                    double l = (rand()%(rect.left+1));
+                    double t = (rand()%(rect.top+1));
+                    double w = (rand()%(rect.right+1));
+                    double h = (rand()%(rect.bottom+1));
+                    //context->set_source_rgb(r,g,b);
+                    DrawRoundRect(context, l, t, w, h);
+                    //context->fill();
+
+                }
                 ::EndPaint(m_hwnd, &ps);
                 result = 0;
                 return true;
@@ -121,10 +174,10 @@ protected:
                 int width = LOWORD(lparam);
                 int height = HIWORD(lparam);
 
-                m_canvas.Resize(width, height);
+                //m_canvas.Resize(width, height);
                 OnSize(0, 0, width, height);
                 //UpdateLayout();
-                SetPath(m_canvas.Path());
+                //SetPath(m_canvas.Path());
                 ClipSiblings();
                 ClipChildren();
 
@@ -180,7 +233,7 @@ protected:
         if(!m_hwnd)
             throw ExceptionInfo << "Can't create Win32 window.";
 
-        m_hdc = ::GetDC(m_hwnd);
+        HDC hdc = ::GetDC(m_hwnd);
         m_created = true;
 
         if(visible)
@@ -194,11 +247,11 @@ protected:
     {
         if(m_hwnd && ::IsWindow(m_hwnd))
         {
-            if(m_hdc)
-            {
-                ::ReleaseDC(m_hwnd, m_hdc);
-                m_hdc = nullptr;
-            }
+            //            if(m_hdc)
+            //            {
+            //                ::ReleaseDC(m_hwnd, m_hdc);
+            //                m_hdc = nullptr;
+            //            }
 
             ::DestroyWindow(m_hwnd);
             m_hwnd = nullptr;
@@ -210,10 +263,9 @@ protected:
 private:
 
     HWND m_hwnd{nullptr};
-    HDC m_hdc {nullptr};
+    //HDC m_hdc {nullptr};
 
-    vgui::Canvas m_canvas;
-    vgui::ColorI m_color{255, 0, 0, 255};
+    vgui::ColorD m_color{0.0, 1.0, 1.0, 1.0};
     bool m_created = false;
 
     T& Derived() { return static_cast<T&>(*this); }

@@ -1,6 +1,8 @@
 #pragma once
 
-#include <vgui/vgui.hpp>
+#include "vgui.hpp"
+#include <cairo/cairo.h>
+#include <cairo/cairo-win32.h>
 
 
 namespace vgui
@@ -10,45 +12,49 @@ class Canvas
 {
 public:
 
-    Canvas()
-    {}
+    Canvas() = default;
+
+    Canvas(HDC hdc) : m_hdc(hdc)
+    {
+        m_surface = cairo_win32_surface_create(m_hdc);
+
+        if(!m_surface)
+            throw ExceptionInfo << "Can't create Win32 Cairo surface.";
+
+        //cairo_create function does not return NULL.
+        m_cairo = cairo_create(m_surface);
+
+    }
 
     ~Canvas()
-    {}
-
-    Canvas& Clear(vgui::Color color)
     {
+        if(m_cairo)
+        {
+            cairo_destroy(m_cairo);
+            m_cairo = nullptr;
+        }
 
-        return *this;
+        if(m_surface)
+        {
+            cairo_surface_destroy(m_surface);
+            m_surface = nullptr;
+        }
     }
 
-    Canvas& Display(HDC hdc)
+    Canvas& Fill(vgui::ColorD color)
     {
 
-        return *this;
-    }
-
-    Canvas& Resize(size_t width, size_t height)
-    {
-
-        return *this;
-    }
-
-    vgui::Path& Path()
-    {
-
-        return m_path;
-    }
-
-    Canvas& SetPath(vgui::Path path)
-    {
-
+        cairo_set_source_rgba(m_cairo, color.r , color.g, color.b, 1.0);
+        cairo_rectangle(m_cairo, rect.left, rect.top, rect.right, rect.bottom);
+        cairo_fill(m_cairo);
         return *this;
     }
 
 private:
 
-    vgui::Path m_path;
+    HDC m_hdc {nullptr};
+    cairo_surface_t* m_surface {nullptr};
+    cairo_t* m_cairo {nullptr};
 };//class Canvas
 
 }//namespace vgui

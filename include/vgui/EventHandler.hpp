@@ -1,8 +1,11 @@
 #pragma once
 
-#include <vgui/Rect.hpp>
-#include <vgui/Color.hpp>
-#include <vgui/Canvas.hpp>
+/*
+#include "Color.hpp"
+#include "Rect.hpp"
+#include "Path.hpp"
+#include "Canvas.hpp"
+*/
 
 namespace vgui
 {
@@ -14,7 +17,7 @@ protected:
     virtual void OnIdle(){}
     virtual void OnSizeChanging(double& /*x*/, double& /*y*/, double& /*width*/, double& /*height*/) {}
     virtual void OnSize(double /*x*/, double /*y*/, double /*width*/, double /*height*/) {}
-    virtual void OnDraw(vgui::Canvas& /*canvas*/){}
+    virtual void OnDraw(){}//vgui::Canvas& /*canvas*/){}
 
     virtual void OnLostFocus(){}
     virtual void OnFocus(){}

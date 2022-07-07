@@ -3,8 +3,8 @@
 #include <algorithm>
 #include <vector>
 
-#include <vgui/Exception.hpp>
-#include <vgui/unique_vector.hpp>
+#include "Exception.hpp"
+#include "unique_vector.hpp"
 
 
 namespace vgui

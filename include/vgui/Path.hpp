@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Color.hpp"
+#include "Rect.hpp"
+
 
 namespace vgui
 {

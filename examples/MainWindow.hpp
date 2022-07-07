@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vgui/Window.hpp>
+#include <vgui/vgui.hpp>
 
 namespace vgui
 {
