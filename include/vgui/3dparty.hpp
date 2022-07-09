@@ -18,9 +18,6 @@
 #include <memory>
 #include <optional>
 
-#include <cairomm/cairomm.h>
-#include <cairomm/win32_surface.h>
-
 #ifdef _WIN32
 #include <windows.h>
 #include <wingdi.h>

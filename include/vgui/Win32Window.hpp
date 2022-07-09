@@ -2,7 +2,7 @@
 
 #include "vgui.hpp"
 #include <windows.h>
-
+#include <kcanvas/canvas.h>
 
 namespace vgui::impl
 {
@@ -92,16 +92,16 @@ protected:
     virtual void ClipChildren()
     {}
 
-    void DrawRoundRect(Cairo::RefPtr<Cairo::Context> context, double l,double t,double w,double h)
+    void DrawRoundRect(double l,double t,double w,double h)
     {
-        cairo_t* cr = (cairo_t*)context->cobj();
-        /* a custom shape that could be wrapped in a function */
-        double x         = l,        /* parameters like cairo_rectangle */
+        /*cairo_t* cr = (cairo_t*)context->cobj();
+        // a custom shape that could be wrapped in a function
+        double x         = l,        // parameters like cairo_rectangle
                 y         = t,
                 width         = w,
                 height        = h,
-                aspect        = 1.0,     /* aspect ratio */
-                corner_radius = height / 10.0;   /* and corner curvature radius */
+                aspect        = 1.0,     // aspect ratio
+                corner_radius = height / 10.0;   // and corner curvature radius
 
         double radius = corner_radius / aspect;
         double degrees = M_PI / 180.0;
@@ -121,7 +121,7 @@ protected:
         cairo_fill_preserve  (cr);
         cairo_set_source_rgba (cr, 0.5, 0, 0, 0.5);
         cairo_set_line_width (cr, 10.0);
-        cairo_stroke (cr);
+        cairo_stroke (cr);*/
     }
 
     virtual bool ProcessEvent(HWND handle, UINT msg, WPARAM wparam, LPARAM lparam, LRESULT& result)
@@ -133,15 +133,16 @@ protected:
                 PAINTSTRUCT ps;
                 HDC hdc = ::BeginPaint(m_hwnd, &ps);
 
-                RECT rect;
-                ::GetClientRect(m_hwnd, &rect);
+                RECT r;
+                ::GetClientRect(m_hwnd, &r);
 
-                auto surface = Cairo::Win32Surface::create(hdc);
-                auto context = Cairo::Context::create(surface);
+                using namespace k_canvas;
+                kRectInt krect(
+                    r.left, r.top,
+                    r.right, r.bottom);
 
-//                context->set_source_rgb(1.0, 0.0, 0.0);
-//                context->rectangle(rect.left, rect.top, rect.right, rect.bottom);
-//                context->fill();
+                kContextCanvas canvas(hdc, &krect);
+
 
                 srand(time(NULL));
 
@@ -151,13 +152,15 @@ protected:
                     double g = (rand()%100)/100.0;
                     double b = (rand()%100)/100.0;
 
-                    double l = (rand()%(rect.left+1));
-                    double t = (rand()%(rect.top+1));
-                    double w = (rand()%(rect.right+1));
-                    double h = (rand()%(rect.bottom+1));
-                    //context->set_source_rgb(r,g,b);
-                    DrawRoundRect(context, l, t, w, h);
-                    //context->fill();
+                    double l = 0;//(rand()%100);
+                    double t = 100;//(rand()%100);
+                    double w = 400;//(rand()%100);
+                    double h = 300;//(rand()%100);
+                    //DrawRoundRect(context, l, t, w, h);
+
+                    kBrush bg(k_canvas::kColor(r,g,b,0.5));
+                    canvas.Rectangle(kRect(l,t,w,h), nullptr, &bg);
+
 
                 }
                 ::EndPaint(m_hwnd, &ps);

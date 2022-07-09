@@ -19,5 +19,5 @@ include_directories( ${CAIROMM_INCLUDE_DIRS}  )
 
 link_libraries(${CAIROMM_LIBRARY})
 add_executable(MainWindow MainWindow.cpp)
-target_link_libraries(MainWindow mingw32 cairo cairomm-1.16)
+target_link_libraries(MainWindow mingw32 kcanvas)
 

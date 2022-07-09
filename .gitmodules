@@ -1,0 +1,6 @@
+[submodule "3dparty/kcanvas"]
+	path = 3dparty/kcanvas
+	url = https://github.com/vgui/kcanvas.git
+[submodule "3dparty/kcommon"]
+	path = 3dparty/kcommon
+	url = https://github.com/vgui/kcommon.git

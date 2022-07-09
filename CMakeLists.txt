@@ -10,5 +10,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${VGUI_BINARY_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${VGUI_BINARY_DIR})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${VGUI_BINARY_DIR})
 
+add_subdirectory(3dparty/kcanvas/src)
+include_directories(3dparty/kcanvas/include)
+include_directories(3dparty/kcommon/include)
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 add_subdirectory(examples)
