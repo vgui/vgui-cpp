@@ -133,33 +133,33 @@ protected:
                 PAINTSTRUCT ps;
                 HDC hdc = ::BeginPaint(m_hwnd, &ps);
 
-                RECT r;
-                ::GetClientRect(m_hwnd, &r);
+                RECT rect;
+                ::GetClientRect(m_hwnd, &rect);
 
                 using namespace k_canvas;
                 kRectInt krect(
-                    r.left, r.top,
-                    r.right, r.bottom);
+                    rect.left, rect.top,
+                    rect.right+1, rect.bottom+1);
 
                 kContextCanvas canvas(hdc, &krect);
 
 
                 srand(time(NULL));
 
-                for(int i = 0; i<300;i++)
+                for(int i = 0; i<1000;i++)
                 {
-                    double r = (rand()%100)/100.0;
-                    double g = (rand()%100)/100.0;
-                    double b = (rand()%100)/100.0;
+                    int r = rand()%255;
+                    int g = rand()%255;
+                    int b = rand()%255;
 
-                    double l = 0;//(rand()%100);
-                    double t = 100;//(rand()%100);
-                    double w = 400;//(rand()%100);
-                    double h = 300;//(rand()%100);
+                    int l = rand()%rect.right;
+                    int t = rand()%rect.bottom;
+                    int w = rand()%(rect.right + rect.right);
+                    int h = rand()%(rect.bottom + rect.bottom);
                     //DrawRoundRect(context, l, t, w, h);
 
-                    kBrush bg(k_canvas::kColor(r,g,b,0.5));
-                    canvas.Rectangle(kRect(l,t,w,h), nullptr, &bg);
+                    kBrush bg(k_canvas::kColor(r,g,b,127));
+                    canvas.RoundedRectangle(kRect(l,t,w,h),kSize(20,40), nullptr, &bg);
 
 
                 }
