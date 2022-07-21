@@ -11,9 +11,7 @@ public:
 
     MainWindow(const char* title, int x, int y, int width, int height, bool visible = true) :
         Window(title, x, y, width, height, visible)
-    {
-        Create(title, x, y, width, height, visible);
-    }
+    {}
 
 protected:
 

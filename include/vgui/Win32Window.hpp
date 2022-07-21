@@ -2,9 +2,9 @@
 
 #include "vgui.hpp"
 #include <windows.h>
-#include <kcanvas/canvas.h>
 
-namespace vgui::impl
+
+namespace vgui
 {
 
 template<typename T>
@@ -40,10 +40,6 @@ public:
     T& SetRect(double x, double y, double width, double height, bool redraw = true)
     {
         ::MoveWindow(m_hwnd, x, y, width, height, redraw);
-        //SetWindowPos(m_hwnd, HWND_TOP, x, y, width, height, SWP_NOZORDER);
-
-        //        RectI rect = Rect();
-        //        OnSize(0, 0, rect.width, rect.height);
 
         if(redraw)
             Redraw();
@@ -73,13 +69,6 @@ public:
         return Derived();
     }
 
-    /* vgui::Canvas& Canvas()
-    {
-        return m_canvas;
-    }*/
-
-protected:
-
     virtual void UpdateLayout()
     {}
 
@@ -92,41 +81,11 @@ protected:
     virtual void ClipChildren()
     {}
 
-    void DrawRoundRect(double l,double t,double w,double h)
-    {
-        /*cairo_t* cr = (cairo_t*)context->cobj();
-        // a custom shape that could be wrapped in a function
-        double x         = l,        // parameters like cairo_rectangle
-                y         = t,
-                width         = w,
-                height        = h,
-                aspect        = 1.0,     // aspect ratio
-                corner_radius = height / 10.0;   // and corner curvature radius
-
-        double radius = corner_radius / aspect;
-        double degrees = M_PI / 180.0;
-
-        cairo_new_sub_path (cr);
-        cairo_arc (cr, x + width - radius, y + radius, radius, -90 * degrees, 0 * degrees);
-        cairo_arc (cr, x + width - radius, y + height - radius, radius, 0 * degrees, 90 * degrees);
-        cairo_arc (cr, x + radius, y + height - radius, radius, 90 * degrees, 180 * degrees);
-        cairo_arc (cr, x + radius, y + radius, radius, 180 * degrees, 270 * degrees);
-        cairo_close_path (cr);
-
-        double r = (rand()%100)/100.0;
-        double g = (rand()%100)/100.0;
-        double b = (rand()%100)/100.0;
-
-        cairo_set_source_rgb (cr, r, g, b);
-        cairo_fill_preserve  (cr);
-        cairo_set_source_rgba (cr, 0.5, 0, 0, 0.5);
-        cairo_set_line_width (cr, 10.0);
-        cairo_stroke (cr);*/
-    }
+protected:
 
     virtual bool ProcessEvent(HWND handle, UINT msg, WPARAM wparam, LPARAM lparam, LRESULT& result)
     {
-        if(handle == m_hwnd)
+        if(handle == m_hwnd && m_created)
         {
             if(msg == WM_PAINT)
             {
@@ -136,33 +95,10 @@ protected:
                 RECT rect;
                 ::GetClientRect(m_hwnd, &rect);
 
-                using namespace k_canvas;
-                kRectInt krect(
-                    rect.left, rect.top,
-                    rect.right+1, rect.bottom+1);
+                OnBeginPaint();
+                OnPaint();
+                OnEndPaint();
 
-                kContextCanvas canvas(hdc, &krect);
-
-
-                srand(time(NULL));
-
-                for(int i = 0; i<1000;i++)
-                {
-                    int r = rand()%255;
-                    int g = rand()%255;
-                    int b = rand()%255;
-
-                    int l = rand()%rect.right;
-                    int t = rand()%rect.bottom;
-                    int w = rand()%(rect.right + rect.right);
-                    int h = rand()%(rect.bottom + rect.bottom);
-                    //DrawRoundRect(context, l, t, w, h);
-
-                    kBrush bg(k_canvas::kColor(r,g,b,127));
-                    canvas.RoundedRectangle(kRect(l,t,w,h),kSize(20,40), nullptr, &bg);
-
-
-                }
                 ::EndPaint(m_hwnd, &ps);
                 result = 0;
                 return true;
@@ -177,12 +113,7 @@ protected:
                 int width = LOWORD(lparam);
                 int height = HIWORD(lparam);
 
-                //m_canvas.Resize(width, height);
                 OnSize(0, 0, width, height);
-                //UpdateLayout();
-                //SetPath(m_canvas.Path());
-                ClipSiblings();
-                ClipChildren();
 
                 result = 0;
                 return true;
@@ -236,7 +167,7 @@ protected:
         if(!m_hwnd)
             throw ExceptionInfo << "Can't create Win32 window.";
 
-        HDC hdc = ::GetDC(m_hwnd);
+        m_canvas.Create(m_hwnd, width, height);
         m_created = true;
 
         if(visible)
@@ -250,12 +181,6 @@ protected:
     {
         if(m_hwnd && ::IsWindow(m_hwnd))
         {
-            //            if(m_hdc)
-            //            {
-            //                ::ReleaseDC(m_hwnd, m_hdc);
-            //                m_hdc = nullptr;
-            //            }
-
             ::DestroyWindow(m_hwnd);
             m_hwnd = nullptr;
         }
@@ -263,20 +188,24 @@ protected:
         m_created = false;
     }
 
-private:
-
-    HWND m_hwnd{nullptr};
-    //HDC m_hdc {nullptr};
-
-    vgui::ColorD m_color{0.0, 1.0, 1.0, 1.0};
-    bool m_created = false;
-
-    T& Derived() { return static_cast<T&>(*this); }
-
     HWND Handle()
     {
         return m_hwnd;
     }
+
+    D3D9Canvas& Canvas()
+    {
+        return m_canvas;
+    }
+
+private:
+
+    HWND m_hwnd{nullptr};
+    D3D9Canvas m_canvas;
+    //vgui::ColorD m_color{0.0, 1.0, 1.0, 1.0};
+    bool m_created = false;
+
+    T& Derived() { return static_cast<T&>(*this); }
 
     static LRESULT CALLBACK StaticProcessEvent(HWND handle, UINT msg, WPARAM wparam, LPARAM lparam)
     {
@@ -329,5 +258,5 @@ private:
 
 };
 
-}//namespace vgui::impl
+}//namespace vgui
 

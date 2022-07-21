@@ -19,5 +19,5 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 #link_libraries(${CAIROMM_LIBRARY})
 add_executable(MainWindow MainWindow.cpp)
-target_link_libraries(MainWindow mingw32)
+target_link_libraries(MainWindow mingw32 d3d9)
 

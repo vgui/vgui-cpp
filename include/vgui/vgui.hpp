@@ -13,6 +13,7 @@
 #include "Path.hpp"
 //#include "WGLContext.hpp"
 //#include "Canvas.hpp"
+#include "D3D9Canvas.hpp"
 
 #include "EventHandler.hpp"
 #include "Win32Window.hpp"

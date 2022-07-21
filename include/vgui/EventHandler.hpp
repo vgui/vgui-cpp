@@ -17,7 +17,9 @@ protected:
     virtual void OnIdle(){}
     virtual void OnSizeChanging(double& /*x*/, double& /*y*/, double& /*width*/, double& /*height*/) {}
     virtual void OnSize(double /*x*/, double /*y*/, double /*width*/, double /*height*/) {}
-    virtual void OnDraw(){}//vgui::Canvas& /*canvas*/){}
+    virtual void OnBeginPaint(){}//vgui::Canvas& /*canvas*/){}
+    virtual void OnPaint(){}//vgui::Canvas& /*canvas*/){}
+    virtual void OnEndPaint(){}//vgui::Canvas& /*canvas*/){}
 
     virtual void OnLostFocus(){}
     virtual void OnFocus(){}

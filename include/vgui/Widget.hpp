@@ -151,7 +151,7 @@ protected:
             m_window = newparent->m_window;
     }
 
-    void OnDraw() override
+    void OnPaint() override
     {
         if(Visible())
         {
@@ -159,7 +159,7 @@ protected:
 //            g.Render(m_stroker, BorderColor());
 
             for(size_t i = 0; i < Childs(); ++i)
-                Child(i).OnDraw();
+                Child(i).OnPaint();
         }
     }
 

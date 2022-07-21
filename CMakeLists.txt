@@ -10,8 +10,5 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${VGUI_BINARY_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${VGUI_BINARY_DIR})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${VGUI_BINARY_DIR})
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/3dparty/sigrlinn)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/3dparty/sigrlinn/sigrlinn)
-
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 add_subdirectory(examples)

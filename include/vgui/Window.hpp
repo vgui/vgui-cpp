@@ -8,18 +8,18 @@ namespace vgui
 
 //We use CRTP to avoid using *.cpp files
 template<typename T>
-class Window : public impl::Win32Window<Window<T>>
+class Window : public Win32Window<Window<T>>
 {
 public:
 
     using WidgetType = T;
     using ThisType = vgui::Window<WidgetType>;
-    using BaseType = impl::Win32Window<ThisType>;
+    using BaseType = Win32Window<ThisType>;
 
-    Window(const char* title, int x, int y, int width, int height, bool visible = true) :
-        BaseType()
+    Window(const char* title, int x, int y, int width, int height, bool visible = true) : BaseType()
     {
         m_widget.m_window = this;
+        Create(title, x, y, width, height, visible);
     }
 
     WidgetType& Widget()
@@ -55,9 +55,20 @@ public:
 
 protected:
 
-    void OnDraw() override
+    void OnBeginPaint() override
     {
+        this->Canvas().Begin();
+    }
+
+    void OnPaint() override
+    {
+        this->Canvas().Clear(255, 0, 0);
         //m_widget.OnDraw(canvas);
+    }
+
+    void OnEndPaint() override
+    {
+        this->Canvas().End();
     }
 
     void OnSize(double x, double y, double width, double height) override
@@ -104,7 +115,6 @@ private:
     }
 
     WidgetType m_widget;
-
     static inline std::vector<ThisType*> s_windows;
 };//class Window
 
