@@ -85,8 +85,8 @@ public:
         if(m_device->Reset(&params) < 0)
             throw ExceptionInfo << "Direct3D9: can't reset device.";
 
-        if(m_device->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, TRUE) < 0)
-            throw ExceptionInfo << "Direct3D9: can't set antialiasing.";
+        //if(m_device->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, TRUE) < 0)
+            //throw ExceptionInfo << "Direct3D9: can't set antialiasing.";
     }
 
     void Destroy()

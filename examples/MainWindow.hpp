@@ -9,9 +9,10 @@ class MainWindow : public Window<Widget>
 {
 public:
 
-    MainWindow(const char* title, int x, int y, int width, int height, bool visible = true) :
-        Window(title, x, y, width, height, visible)
-    {}
+    MainWindow(const char* title, int x, int y, int width, int height, bool visible = true)
+    {
+        Create(title, x, y, width, height);
+    }
 
 protected:
 

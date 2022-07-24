@@ -13,30 +13,25 @@ class Window : public Win32Window<Window<T>>
 public:
 
     using WidgetType = T;
-    using ThisType = vgui::Window<WidgetType>;
+    using ThisType = Window<WidgetType>;
     using BaseType = Win32Window<ThisType>;
 
-    Window(const char* title, int x, int y, int width, int height, bool visible = true) : BaseType()
-    {
-        m_widget.m_window = this;
-        Create(title, x, y, width, height, visible);
-    }
-
-    WidgetType& Widget()
-    {
-        return m_widget;
-    }
-
-    void Create(const char* title, int x, int y, int width, int height, bool visible) override
+    void Create(const char* title, int x, int y, int width, int height, bool visible = true) override
     {
         BaseType::Create(title, x, y, width, height, visible);
+        m_widget.m_window = this;
         AddToEventLoop(this);
     }
 
     void Destroy() override
     {
-        RemoveFromEventLoop(this);
         BaseType::Destroy();
+        RemoveFromEventLoop(this);
+    }
+
+    WidgetType& Widget()
+    {
+        return m_widget;
     }
 
     static int Run()
@@ -73,6 +68,7 @@ protected:
 
     void OnSize(double x, double y, double width, double height) override
     {
+        //this->Canvas().Reset(width, height);
         m_widget.SetRect(0, 0, width, height);
     }
 
